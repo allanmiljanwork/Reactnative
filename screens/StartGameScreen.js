@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { TextInput, View, StyleSheet, Alert } from 'react-native';
 
-import PrimaryButton from '../components/PrimaryButton';
+import PrimaryButton from '../components/ui/PrimaryButton';
 
-function StartGameScreen() {
+function StartGameScreen({onConfirmNumber}) {
     const [enterNumber, setEnterNumber] = useState('');
 
-    function numberInputHandler(enteredText) {
-        setEnterNumber(enteredText);
-    };
+    function numberInputHandler(enterText) {
+        setEnterNumber(enterText);
+    }
 
     function resetInputHandler() {
         setEnterNumber('');
@@ -16,19 +16,22 @@ function StartGameScreen() {
 
     function confirmInputHandler() {
         const chosenNumber = parseInt(enterNumber);
+
         if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
-            console.log('Invalid number entered:', enterNumber); Alert.alert('Invalid num', 'Num has to be between 1 and 99', [{
-                text: 'Okay', style: 'destructive', onPress: resetInputHandler
-            }]);
+            Alert.alert(
+                'Invalid number!',
+                'Number has to be a number between 1 and 99.',
+                [{ text: 'Okay', style: 'destructive', onPress: resetInputHandler }]
+            );
             return;
         }
 
-        console.log('valid number');
+        onConfirmNumber(chosenNumber);
     }
 
     return (
         <View style={styles.inputContainer}>
-            <TextInput style={styles.numberInput} maxLength={2} keyboardType="number-pad" autoCapitalize='none' autoCorrect={false} onChange={numberInputHandler} value={enterNumber} />
+            <TextInput style={styles.numberInput} maxLength={2} keyboardType="number-pad" autoCapitalize='none' autoCorrect={false} onChangeText={numberInputHandler} value={enterNumber} />
             <View style={styles.buttonsContainer}>
                 <View style={styles.buttonContainer}>
                     <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
