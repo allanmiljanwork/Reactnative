@@ -7,7 +7,7 @@ import NumberContainer from "../components/game/NumberContainer";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
 import InstructionText from "../components/ui/InstructionText";
-import GuessLogItem from "../components/game/GuessLogitem";
+import GuessLogItem from "../components/game/GuessLogItem";
 
 
 function generateRandomNum(min, max, exclude) {
@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         padding: 24,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     instructionText: {
         marginBottom: 12,
