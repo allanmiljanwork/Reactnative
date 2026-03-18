@@ -7,7 +7,11 @@ function Iconbutton({ icon, color, onPress }) {
       onPress={onPress}
       style={({ pressed }) => pressed && styles.pressed}
     >
-      <AntDesign name={icon} size={24} color={color} />
+      {typeof icon === "string" ? (
+        <AntDesign name={icon} size={24} color={color} />
+      ) : (
+        icon
+      )}
     </Pressable>
   );
 }
