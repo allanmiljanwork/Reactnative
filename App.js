@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import Feather from "@expo/vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 import CategoriesScreen from "./screens/CategoriesScreen";
 import MealsOverviewScreen from "./screens/MealsOverviewScreen";
@@ -19,6 +21,9 @@ function DrawerNavigator() {
         headerStyle: { backgroundColor: "#351401" },
         headerTintColor: "white",
         sceneStyle: { backgroundColor: "#3f2f25" },
+        drawerInactiveTintColor: "black",
+        drawerActiveTintColor: "#351401",
+        drawerActiveBackgroundColor: "#ccc",
       }}
     >
       <Drawer.Screen
@@ -26,9 +31,20 @@ function DrawerNavigator() {
         component={CategoriesScreen}
         options={{
           title: "All Categories",
+          drawerIcon: ({ color, size }) => (
+            <Feather name="list" size={24} color="black" />
+          ),
         }}
       />
-      <Drawer.Screen name="Favorites" component={FavoritesScreen} />
+      <Drawer.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <AntDesign name="star" size={24} color="black" />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -43,6 +59,7 @@ export default function App() {
             headerStyle: { backgroundColor: "#351401" },
             headerTintColor: "white",
             contentStyle: { backgroundColor: "#3f2f25" },
+            drawerContentStyle: { backgroundColor: "red" },
           }}
         >
           <Stack.Screen
