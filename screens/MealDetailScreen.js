@@ -1,17 +1,11 @@
 import { useLayoutEffect } from "react";
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Button,
-} from "react-native";
+import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 
 import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealDetails";
-import Subtitle from "../components/mealDetail/Subtitle";
-import List from "../components/mealDetail/List";
+import Subtitle from "../components/MealDetail/Subtitle";
+import List from "../components/MealDetail/List";
+import IconButton from "../components/IconButton";
 
 function MealDetailScreen({ route, navigation }) {
   const mealId = route.params.mealId;
@@ -24,7 +18,14 @@ function MealDetailScreen({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        return <Button title="Tap me!" onPress={headerButtonPressHandler} />;
+        return (
+          <IconButton
+            icon="star"
+            color="white"
+            title="Tap me!"
+            onPress={headerButtonPressHandler}
+          />
+        );
       },
     });
   }, [navigation, headerButtonPressHandler]);
@@ -41,7 +42,7 @@ function MealDetailScreen({ route, navigation }) {
       />
       <View style={styles.listOuter}>
         <View style={styles.listContainer}>
-          <Subtitle>ingredients</Subtitle>
+          <Subtitle>Ingredients</Subtitle>
           <List data={selectedMeal.ingredients} />
           <Subtitle>Steps</Subtitle>
           <List data={selectedMeal.steps} />
