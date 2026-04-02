@@ -25,8 +25,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "expo": {
+      "plugins": [
+        [
+          "expo-image-picker",
+          {
+            "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera"
+          }
+        ]
+      ]
     }
   }
 }
-
-
