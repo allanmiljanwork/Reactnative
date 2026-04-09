@@ -46,3 +46,7 @@ yarn-error.*
 # google services
 
 google-services.json
+
+# api_key
+
+cfg.js
