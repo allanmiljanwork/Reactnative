@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useLayoutEffect } from "react";
 import { StyleSheet, Button } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
@@ -38,7 +38,7 @@ function Map({ navigation }) {
     navigation.setOptions({
       headerRight: ({ tintColor }) => (
         <Button
-          icon="save"
+          title="save"
           size={24}
           color={tintColor}
           onPress={savePickedLocationHandler}
