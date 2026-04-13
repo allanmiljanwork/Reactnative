@@ -32,7 +32,8 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera"
         }
-      ]
+      ],
+      "expo-sqlite"
     ]
   }
 }
