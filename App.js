@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AppLoading from "expo-app-loading";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import AllPlaces from "./screens/AllPlaces";
 import AddPlace from "./screens/AddPlace";
@@ -27,7 +27,11 @@ export default function App() {
   }, []);
 
   if (!dbInit) {
-    return <AppLoading />;
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary500} />
+      </View>
+    );
   }
 
   return (
@@ -69,3 +73,12 @@ export default function App() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.gray700,
+  },
+});
