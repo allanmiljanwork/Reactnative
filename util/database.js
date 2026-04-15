@@ -59,3 +59,30 @@ export async function fetchPlaces() {
     throw new Error(`Fetch failed: ${error.message}`);
   }
 }
+
+export async function fetchPlaceDetails(id) {
+  if (!id) {
+    throw new Error("Invalid id: id is required.");
+  }
+
+  try {
+    const dbPlace = await database.getFirstAsync(
+      "SELECT * FROM places WHERE id = ?",
+      [id],
+    );
+
+    if (!dbPlace) {
+      throw new Error(`Place with id ${id} not found.`);
+    }
+
+    return new Place(
+      dbPlace.title,
+      dbPlace.imageUri,
+      { lat: dbPlace.lat, lng: dbPlace.lng, address: dbPlace.address },
+      dbPlace.id,
+    );
+  } catch (error) {
+    console.error("Failed to fetch place details:", error);
+    throw new Error(`Fetch details failed: ${error.message}`);
+  }
+}

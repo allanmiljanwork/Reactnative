@@ -4,7 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import PlacesList from "../components/Places/PlacesList";
 import { fetchPlaces } from "../util/database";
 
-function AllPlaces({ route }) {
+function AllPlaces({ navigation }) {
   const [loadedPlaces, setLoadedPlaces] = useState([]);
 
   const isFocused = useIsFocused();
@@ -17,11 +17,15 @@ function AllPlaces({ route }) {
 
     if (isFocused) {
       loadPlaces();
-      // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
     }
   }, [isFocused]);
+  function selectPlaceHandler(id) {
+    navigation.navigate("PlaceDetails", {
+      placeId: id,
+    });
+  }
 
-  return <PlacesList places={loadedPlaces} />;
+  return <PlacesList places={loadedPlaces} onSelectPlace={selectPlaceHandler} />;
 }
 
 export default AllPlaces;
