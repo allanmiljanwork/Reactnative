@@ -1,62 +1,61 @@
 import * as SQLite from "expo-sqlite";
+import { Place } from "../models/place";
 
-const database = SQLite.openDatabase("places.db");
+const database = SQLite.openDatabaseSync("places.db");
 
-export function init() {
-  const promise = new Promise((resolve, reject) => {
-    database.transaction(
-      (tx) => {
-        tx.executeSql(
-          `CREATE TABLE IF NOT EXISTS places (
-            id INTEGER PRIMARY KEY NOT NULL,
-            title TEXT NOT NULL,
-            imageUri TEXT NOT NULL,
-            address TEXT NOT NULL,
-            lat REAL NOT NULL,
-            lng REAL NOT NULL
-          )`,
-          [],
-          () => {
-            resolve();
-          },
-          (_, error) => {
-            reject(error);
-          },
-        );
-      },
-      (txError) => {
-        reject(txError);
-      },
-    );
-  });
-  return promise;
+export async function init() {
+  try {
+    await database.execAsync("PRAGMA journal_mode = WAL;");
+    await database.execAsync(`
+      CREATE TABLE IF NOT EXISTS places (
+        id INTEGER PRIMARY KEY NOT NULL,
+        title TEXT NOT NULL,
+        imageUri TEXT NOT NULL,
+        address TEXT NOT NULL,
+        lat REAL NOT NULL,
+        lng REAL NOT NULL
+      )
+    `);
+  } catch (error) {
+    console.error("Failed to initialize database:", error);
+    throw new Error(`Database initialization failed: ${error.message}`);
+  }
 }
 
-export function insertPlace(place) {
-  const promise = new Promise((resolve, reject) => {
-    database.transaction(
-      (tx) => {
-        tx.executeSql(
-          `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
-          [
-            place.title,
-            place.imageUri,
-            place.address,
-            place.location.lat,
-            place.location.lng,
-          ],
-          (_, result) => {
-            resolve(result);
-          },
-          (_, error) => {
-            reject(error);
-          },
-        );
-      },
-      (txError) => {
-        reject(txError);
-      },
+export async function insertPlace(place) {
+  const { title, imageUri, address, location } = place;
+
+  if (!title || !imageUri || !address || !location?.lat || !location?.lng) {
+    throw new Error("Invalid place data: all fields are required.");
+  }
+
+  try {
+    const result = await database.runAsync(
+      `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
+      [title, imageUri, address, location.lat, location.lng],
     );
-  });
-  return promise;
+    return result;
+  } catch (error) {
+    console.error("Failed to insert place:", error);
+    throw new Error(`Insert failed: ${error.message}`);
+  }
+}
+
+export async function fetchPlaces() {
+  try {
+    const rows = await database.getAllAsync("SELECT * FROM places");
+
+    return rows.map(
+      (dp) =>
+        new Place(
+          dp.title,
+          dp.imageUri,
+          { address: dp.address, lat: dp.lat, lng: dp.lng },
+          dp.id,
+        ),
+    );
+  } catch (error) {
+    console.error("Failed to fetch places:", error);
+    throw new Error(`Fetch failed: ${error.message}`);
+  }
 }

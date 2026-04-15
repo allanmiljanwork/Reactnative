@@ -1,15 +1,10 @@
 import { useState, useCallback, useLayoutEffect } from "react";
-import { StyleSheet, Button } from "react-native";
+import { StyleSheet, Button, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 function Map({ navigation }) {
   const [selectLocation, setSelectLocation] = useState();
-  const region = {
-    latitude: 37.78,
-    longitude: -122.43,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
+  const region = {};
 
   function selectLocationHandler(event) {
     console.log(event);

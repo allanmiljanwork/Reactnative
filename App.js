@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -8,25 +9,24 @@ import AddPlace from "./screens/AddPlace";
 import IconButton from "./components/UI/IconButton";
 import { Colors } from "./constants/colors";
 import Map from "./screens/Map";
-import { useEffect, useState } from "react";
 import { init } from "./util/database";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [dbInit, setDbInit] = useState(false);
+  const [dbInitialized, setDbInitialized] = useState(false);
 
   useEffect(() => {
     init()
       .then(() => {
-        setDbInit(true);
+        setDbInitialized(true);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  if (!dbInit) {
+  if (!dbInitialized) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.primary500} />
@@ -73,7 +73,6 @@ export default function App() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
