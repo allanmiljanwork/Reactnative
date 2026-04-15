@@ -1,35 +1,46 @@
-import { useState, useCallback, useLayoutEffect } from "react";
-import { StyleSheet, Button, Alert } from "react-native";
+import { useCallback, useLayoutEffect, useState } from "react";
+import { Alert, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-function Map({ navigation }) {
-  const [selectLocation, setSelectLocation] = useState();
+function Map({ navigation, route }) {
+  const initialLocation = route.params && {
+    lat: route.params.initialLat,
+    lng: route.params.initialLng,
+  };
+
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
+
   const region = {};
 
   function selectLocationHandler(event) {
-    console.log(event);
+    if (initialLocation) {
+      return;
+    }
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
 
-    setSelectLocation({ lat: lat, lng: lng });
+    setSelectedLocation({ lat: lat, lng: lng });
   }
 
   const savePickedLocationHandler = useCallback(() => {
-    if (!selectLocation) {
+    if (!selectedLocation) {
       Alert.alert(
         "No location picked!",
-        "You have to pick a location (by tapping the screen) first!",
+        "You have to pick a location (by tapping on the map) first!",
       );
       return;
     }
 
-    navigation.navigate("addPlace", {
-      pickedLat: selectLocation.lat,
-      pickedLng: selectLocation.lng,
+    navigation.navigate("AddPlace", {
+      pickedLat: selectedLocation.lat,
+      pickedLng: selectedLocation.lng,
     });
-  }, [navigation, selectLocation]);
+  }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
+    if (initialLocation) {
+      return;
+    }
     navigation.setOptions({
       headerRight: ({ tintColor }) => (
         <Button
@@ -40,7 +51,7 @@ function Map({ navigation }) {
         />
       ),
     });
-  }, [navigation, savePickedLocationHandler]);
+  }, [navigation, savePickedLocationHandler, initialLocation]);
 
   return (
     <MapView
@@ -48,12 +59,12 @@ function Map({ navigation }) {
       initialRegion={region}
       onPress={selectLocationHandler}
     >
-      {selectLocation && (
+      {selectedLocation && (
         <Marker
           title="Picked Location"
           coordinate={{
-            latitude: selectLocation.lat,
-            longitude: selectLocation.lng,
+            latitude: selectedLocation.lat,
+            longitude: selectedLocation.lng,
           }}
         />
       )}

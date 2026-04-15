@@ -14,7 +14,12 @@ import { fetchPlaceDetails } from "../util/database";
 function PlaceDetails({ route, navigation }) {
   const [fetchedPlace, setFetchedPlace] = useState();
 
-  function showOnMapHandler() {}
+  function showOnMapHandler() {
+    navigation.navigate("Map", {
+      initialLat: fetchedPlace.location.lat,
+      initialLng: fetchedPlace.location.lng,
+    });
+  }
 
   const selectedPlaceId = route.params.placeId;
 
@@ -45,9 +50,7 @@ function PlaceDetails({ route, navigation }) {
         <View style={styles.addressContainer}>
           <Text style={styles.address}>{fetchedPlace.address}</Text>
         </View>
-        <Button title="map" onPress={showOnMapHandler}>
-          View on Map
-        </Button>
+        <Button title="map" onPress={showOnMapHandler}></Button>
       </View>
     </ScrollView>
   );
